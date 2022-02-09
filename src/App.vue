@@ -7,33 +7,34 @@
         <my-dialog v-model:show="dialogVisible">
             <post-form @create="createPost"/>
         </my-dialog>
-      <post-list
-              :posts="posts"
-              @remove="removePost"
-      />
+        <post-list
+                :posts="posts"
+                @remove="removePost"
+                v-if="!isPostsLoading"
+        />
+        <div v-else>Идет загрузка...</div>
     </div>
 </template>
 
 <script>
-  import PostList from "@/components/PostList";
-  import PostForm from "@/components/PostForm";
-  import MyDialog from "./components/UI/MyDialog";
-  import MyButton from "./components/UI/MyButton";
+    import PostList from "@/components/PostList";
+    import PostForm from "@/components/PostForm";
+    import MyDialog from "./components/UI/MyDialog";
+    import MyButton from "./components/UI/MyButton";
+    import axios from 'axios'
+
     export default {
-      components: {
-          MyButton,
-          MyDialog,
-        PostForm,
-        PostList
-      },
+        components: {
+            MyButton,
+            MyDialog,
+            PostForm,
+            PostList
+        },
         data() {
             return {
-                posts: [
-                    {id: 1, title: 'js 1', body: 'description js 1'},
-                    {id: 2, title: 'js 2', body: 'description js 2'},
-                    {id: 3, title: 'js 3', body: 'description js 3'},
-                ],
+                posts: [],
                 dialogVisible: false,
+                isPostsLoading: false,
             };
         },
         methods: {
@@ -47,6 +48,21 @@
             showDialog() {
                 this.dialogVisible = true
             },
+            async fetchPosts() {
+                try {
+                    this.isPostsLoading = true
+                    const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
+                    this.posts = response.data
+                } catch (e) {
+                    console.log(e)
+                } finally {
+                    this.isPostsLoading = false
+                }
+
+            },
+        },
+        mounted() {
+            this.fetchPosts()
         }
     };
 </script>
