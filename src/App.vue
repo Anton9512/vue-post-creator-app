@@ -3,6 +3,7 @@
       <post-form @create="createPost"/>
       <post-list
               :posts="posts"
+              @remove="removePost"
       />
     </div>
 </template>
@@ -27,6 +28,9 @@
         methods: {
             createPost(post) {
                 this.posts.unshift(post)
+            },
+            removePost(post) {
+                this.posts = this.posts.filter(p => p.id !== post.id)
             }
         }
     };
