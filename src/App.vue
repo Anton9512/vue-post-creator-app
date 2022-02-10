@@ -14,7 +14,7 @@
             <post-form @create="createPost"/>
         </my-dialog>
         <post-list
-                :posts="posts"
+                :posts="sortedPosts"
                 @remove="removePost"
                 v-if="!isPostsLoading"
         />
@@ -46,7 +46,7 @@
                 selectedSort: '',
                 sortOption: [
                     {value: 'title', name: 'По названию'},
-                    {value: 'title', name: 'По описанию'},
+                    {value: 'body', name: 'По описанию'},
                 ],
             };
         },
@@ -76,7 +76,12 @@
         },
         mounted() {
             this.fetchPosts()
-        }
+        },
+        computed: {
+            sortedPosts() {
+                return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
+            }
+        },
     };
 </script>
 
@@ -91,6 +96,7 @@
     .app {
         padding: 20px;
     }
+
     .app_btns {
         display: flex;
         justify-content: space-between;
