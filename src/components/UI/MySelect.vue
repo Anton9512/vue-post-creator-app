@@ -30,5 +30,8 @@
 </script>
 
 <style scoped>
-
+    select {
+        width: 150px;
+        height: 45px;
+    }
 </style>
